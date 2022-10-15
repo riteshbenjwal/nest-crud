@@ -19,10 +19,12 @@ import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { Task } from './task.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
+import { Logger } from '@nestjs/common';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+  private logger = new Logger('TasksController');
   constructor(private tasksService: TasksService) {}
 
   /*@Get()
@@ -57,8 +59,6 @@ export class TasksController {
     const {status} = updateTaskStatusDto;
     return this.tasksService.updateTaskStatus(id, status);
   }
-
-
   */
 
   @Get()
@@ -67,6 +67,10 @@ export class TasksController {
     @GetUser()
     user: User,
   ): Promise<Task[]> {
+    this.logger.verbose(
+      `User "${user.username}" retrieving all tasks
+      )}`,
+    );
     return this.tasksService.getTasks(filterDto, user);
   }
 
